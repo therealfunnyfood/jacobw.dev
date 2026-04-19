@@ -1,169 +1,772 @@
 <!DOCTYPE html>
-<html lang="en"><head>
-	<meta name="generator" content="Hugo 0.111.3">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jacob Wynhof — Software Engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    <style>
-        :root {
-            --accent-color: #FF4D4D;
-        }
-    </style>
+    :root {
+      --bg: #0a0a0f;
+      --bg-surface: #111118;
+      --bg-card: #16161f;
+      --bg-card-hover: #1c1c28;
+      --border: #252530;
+      --border-accent: #3a3a4a;
+      --text: #e8e8ef;
+      --text-dim: #8888a0;
+      --text-muted: #555568;
+      --accent: #00e5a0;
+      --accent-dim: #00e5a033;
+      --accent-glow: #00e5a018;
+      --red: #ff4d6a;
+      --blue: #4d9fff;
+      --yellow: #ffd24d;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-body: 'Outfit', sans-serif;
+    }
 
-    
-    
-    
-    
-    
-    
+    html { scroll-behavior: smooth; }
 
-    
-    <title>Programming</title>
-    <meta name="description" content="By, Jacob Wynhof">
-    <meta name="keywords" content=''>
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
 
-    <meta property="og:url" content="https://jacobw.dev/">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Programming">
-    <meta property="og:description" content="By, Jacob Wynhof">
-    <meta property="og:image" content="https://jacobw.dev/avatar.jpg">
-    <meta property="og:image:secure_url" content="https://jacobw.dev/avatar.jpg">
+    /* ── Noise overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px 256px;
+    }
 
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Programming">
-    <meta name="twitter:description" content="By, Jacob Wynhof">
-    <meta property="twitter:domain" content="https://jacobw.dev/">
-    <meta property="twitter:url" content="https://jacobw.dev/">
-    <meta name="twitter:image" content="https://jacobw.dev/avatar.jpg">
+    /* ── Grid background ── */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.15;
+      mask-image: radial-gradient(ellipse 70% 50% at 50% 30%, black, transparent);
+    }
 
-    
-    <link rel="canonical" href="https://jacobw.dev/" />
+    /* ── Glow orb ── */
+    .glow-orb {
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--accent-dim) 0%, transparent 70%);
+      top: -200px;
+      right: -100px;
+      z-index: 0;
+      pointer-events: none;
+      animation: orbFloat 12s ease-in-out infinite;
+    }
 
-    <link rel="stylesheet" type="text/css" href="https://jacobw.dev/css/normalize.min.css" media="print" onload="this.media='all'">
-    <link rel="stylesheet" type="text/css" href="https://jacobw.dev/css/main.css">
-    <link disabled id="dark-theme" rel="stylesheet" href="https://jacobw.dev/css/dark.css">
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-40px, 30px); }
+    }
 
-    <script src="https://jacobw.dev/js/svg-injector.min.js"></script>
-    <script src="https://jacobw.dev/js/feather-icons.min.js"></script>
-    <script src="https://jacobw.dev/js/main.js"></script>
+    /* ── Layout ── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
 
-    
-    
+    section {
+      padding: 80px 0;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(10, 10, 15, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+
+    .nav-logo {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-logo span { color: var(--text-dim); }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 60px;
+    }
+
+    .hero-content { width: 100%; }
+
+    .hero-tag {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--accent);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .hero-tag::before {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .hero h1 {
+      font-family: var(--font-body);
+      font-size: clamp(48px, 8vw, 80px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -2px;
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.1s forwards;
+    }
+
+    .hero h1 .accent { color: var(--accent); }
+
+    .hero-desc {
+      font-size: 18px;
+      color: var(--text-dim);
+      max-width: 540px;
+      line-height: 1.7;
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.2s forwards;
+    }
+
+    .hero-links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.3s forwards;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: all 0.25s ease;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .btn-primary:hover {
+      background: #00ffb3;
+      box-shadow: 0 0 30px var(--accent-dim);
+    }
+
+    .btn-ghost {
+      border: 1px solid var(--border-accent);
+      color: var(--text-dim);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ── Section headers ── */
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--accent);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .section-title {
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -1px;
+      margin-bottom: 48px;
+    }
+
+    /* ── Experience ── */
+    .exp-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 32px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .exp-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--accent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .exp-card:hover {
+      border-color: var(--border-accent);
+      background: var(--bg-card-hover);
+    }
+
+    .exp-card:hover::before { opacity: 1; }
+
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .exp-role {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .exp-company {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--accent);
+    }
+
+    .exp-date {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+
+    .exp-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .exp-bullets li {
+      color: var(--text-dim);
+      font-size: 15px;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .exp-bullets li::before {
+      content: '▹';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+    }
+
+    /* ── Projects ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .project-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px 32px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      position: relative;
+    }
+
+    .project-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px rgba(0, 229, 160, 0.06);
+    }
+
+    .project-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .project-icon {
+      font-size: 22px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent-glow);
+      border: 1px solid var(--accent-dim);
+      border-radius: 8px;
+    }
+
+    .project-link-icon {
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+
+    .project-card:hover .project-link-icon { color: var(--accent); }
+
+    .project-name {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .project-desc {
+      color: var(--text-dim);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.04);
+      padding: 4px 10px;
+      border-radius: 4px;
+      letter-spacing: 0.3px;
+    }
+
+    /* ── Skills ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .skill-group {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+    }
+
+    .skill-group-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .skill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .skill-item {
+      font-size: 13px;
+      color: var(--text-dim);
+      background: rgba(255,255,255,0.04);
+      padding: 6px 14px;
+      border-radius: 5px;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+
+    .skill-item:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    /* ── Contact ── */
+    .contact-section {
+      text-align: center;
+      padding: 100px 0 120px;
+    }
+
+    .contact-section .section-label {
+      justify-content: center;
+    }
+
+    .contact-section .section-label::after { display: none; }
+
+    .contact-title {
+      font-size: 40px;
+      font-weight: 600;
+      letter-spacing: -1.5px;
+      margin-bottom: 16px;
+    }
+
+    .contact-desc {
+      color: var(--text-dim);
+      font-size: 16px;
+      margin-bottom: 40px;
+      max-width: 440px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 0;
+      text-align: center;
+    }
+
+    footer p {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      section { padding: 60px 0; }
+      .nav-links { gap: 20px; }
+      .nav-links a { font-size: 12px; }
+      .exp-card { padding: 24px; }
+      .section-title { font-size: 26px; }
+      .contact-title { font-size: 30px; }
+      .hero-links { flex-direction: column; }
+      .btn { justify-content: center; }
+    }
+  </style>
 </head>
 <body>
-        <script type="text/javascript">
-            
-            setThemeByUserPref();
-        </script><header class="header">
-    <nav class="header-nav">
 
-        
-        <div class="avatar">
-            <a href="https://jacobw.dev">
-                <img src="https://jacobw.dev/avatar.jpg" alt="avatar" />
-            </a>
-        </div>
-        
+<div class="grid-bg"></div>
+<div class="glow-orb"></div>
 
-        <div class="nav-title">
-            <a class="nav-brand" href="https://jacobw.dev">Programming</a>
-        </div>
+<!-- ── Nav ── -->
+<nav>
+  <div class="container">
+    <a href="#" class="nav-logo">jacob<span>.wynhof</span></a>
+    <ul class="nav-links">
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
 
-        <div class="nav-links">
-            
-            <div class="nav-link">
-                <a href="https://jacobw.dev/posts/"> Posts </a>
-            </div>
-            
-
-            <span class="nav-icons-divider"></span>
-            <div class="nav-link dark-theme-toggle">
-                <span id="dark-theme-toggle-screen-reader-target" class="sr-only"></span>
-                <a>
-                    <span id="theme-toggle-icon" data-feather="moon"></span>
-                </a>
-            </div>
-
-            <div class="nav-link" id="hamburger-menu-toggle">
-                <span id="hamburger-menu-toggle-screen-reader-target" class="sr-only">menu</span>
-                <a>
-                    <span data-feather="menu"></span>
-                </a>
-            </div>
-
-            
-            <ul class="nav-hamburger-list visibility-hidden">
-                
-                <li class="nav-item">
-                    <a href="https://jacobw.dev/posts/"> Posts </a>
-                </li>
-                
-                <li class="nav-item dark-theme-toggle">
-                    <span id="dark-theme-toggle-screen-reader-target" class="sr-only">theme</span>
-                    <a>
-                        <span id="theme-toggle-icon" data-feather="moon"></span>
-                    </a>
-                </li>
-            </ul>
-
-        </div>
-    </nav>
-</header>
-<main id="content">
-<section class="home-about">
-	<div class="avatar">
-        
-        <img class=size-m src='https://jacobw.dev/avatar.jpg' alt="avatar" />
-        
-	</div>
-    <h1>Programming</h1>
-    <h3>By, Jacob Wynhof</h3>
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-tag">Software Engineer</div>
+      <h1>Jacob<br>Wynhof<span class="accent">.</span></h1>
+      <p class="hero-desc">
+        CS student & software engineering intern at Lockheed Martin.
+        Building things with Python, C, and too many Linux configs.
+      </p>
+      <div class="hero-links">
+        <a href="mailto:me@jacobw.dev" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          Get in touch
+        </a>
+        <a href="https://github.com/therealfunnyfood" target="_blank" class="btn btn-ghost">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          GitHub
+        </a>
+        <a href="/Jacob_Wynhof_Resume.pdf" target="_blank" class="btn btn-ghost">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Résumé
+        </a>
+      </div>
+    </div>
+  </div>
 </section>
 
-<div class="flex-break"></div>
-
-
-
-
-
-
-
-
-    <div class="home-posts list-posts">
-        <h2> Posts</h2>
-
-    
-
-    
-        <article class="post-title">
-    <a href="https://jacobw.dev/posts/bg/" class="post-link">Background</a>
-    <div class="flex-break"></div>
-    <span class="post-date">May 15, 2023</span>
-</article>
-<article class="post-title">
-    <a href="https://jacobw.dev/posts/abtme/" class="post-link">How I Became an Expert and Why I Chose This</a>
-    <div class="flex-break"></div>
-    <span class="post-date">May 15, 2023</span>
-</article>
-<article class="post-title">
-    <a href="https://jacobw.dev/posts/sources/" class="post-link">Sources</a>
-    <div class="flex-break"></div>
-    <span class="post-date">May 15, 2023</span>
-</article>
-
-    
+<!-- ── Experience ── -->
+<section id="experience">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Experience</div>
+      <h2 class="section-title">Where I've worked</h2>
     </div>
+    <div class="exp-card reveal">
+      <div class="exp-header">
+        <div>
+          <div class="exp-role">College Intern 1 — Red Team</div>
+          <div class="exp-company">Lockheed Martin</div>
+        </div>
+        <div class="exp-date">Jun 2024 — Present</div>
+      </div>
+      <ul class="exp-bullets">
+        <li>Develop and maintain an internal web application for logging and tracking mission data</li>
+        <li>Build full-stack features using Django, jQuery, and Bootstrap 5</li>
+        <li>Collaborate through Git and GitLab workflows with team members</li>
+      </ul>
+    </div>
+  </div>
+</section>
 
+<!-- ── Projects ── -->
+<section id="projects">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Projects</div>
+      <h2 class="section-title">Things I've built</h2>
+    </div>
+    <div class="projects-grid">
 
+      <div class="project-card reveal">
+        <div class="project-card-header">
+          <div class="project-icon">⌨️</div>
+          <svg class="project-link-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </div>
+        <div class="project-name">Custom Macro Pad / Media Controller</div>
+        <p class="project-desc">
+          Hardware macro pad with a touchscreen GUI powered by LVGL in C on a Raspberry Pi 4B. USB HID composite gadget for host communication, with a companion desktop app.
+        </p>
+        <div class="project-tags">
+          <span class="tag">C</span>
+          <span class="tag">LVGL</span>
+          <span class="tag">Raspberry Pi</span>
+          <span class="tag">CMake</span>
+          <span class="tag">Linux</span>
+        </div>
+      </div>
 
-        </main><footer class="footer">
-    
-    
+      <div class="project-card reveal">
+        <div class="project-card-header">
+          <div class="project-icon">🌐</div>
+          <svg class="project-link-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </div>
+        <div class="project-name">jacobw.dev</div>
+        <p class="project-desc">
+          Personal portfolio site. Hand-coded with plain HTML, CSS, and JavaScript — no frameworks, no templates.
+        </p>
+        <div class="project-tags">
+          <span class="tag">HTML</span>
+          <span class="tag">CSS</span>
+          <span class="tag">JavaScript</span>
+        </div>
+      </div>
 
-    <span>&copy; 2023 </span>
-    <span>
-        Made with &#10084;&#65039; using <a target="_blank" href="https://github.com/526avijitgupta/gokarna">Gokarna</a>
-    </span>
+    </div>
+  </div>
+</section>
+
+<!-- ── Skills ── -->
+<section id="skills">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Skills</div>
+      <h2 class="section-title">What I use</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-group reveal">
+        <div class="skill-group-title">Languages</div>
+        <div class="skill-list">
+          <span class="skill-item">Python</span>
+          <span class="skill-item">Java</span>
+          <span class="skill-item">C</span>
+          <span class="skill-item">C++</span>
+          <span class="skill-item">JavaScript</span>
+          <span class="skill-item">HTML/CSS</span>
+          <span class="skill-item">Bash</span>
+        </div>
+      </div>
+      <div class="skill-group reveal">
+        <div class="skill-group-title">Frameworks</div>
+        <div class="skill-list">
+          <span class="skill-item">Django</span>
+          <span class="skill-item">jQuery</span>
+          <span class="skill-item">Bootstrap 5</span>
+          <span class="skill-item">LVGL</span>
+        </div>
+      </div>
+      <div class="skill-group reveal">
+        <div class="skill-group-title">Tools</div>
+        <div class="skill-list">
+          <span class="skill-item">Git</span>
+          <span class="skill-item">GitLab</span>
+          <span class="skill-item">Linux (Arch)</span>
+          <span class="skill-item">CMake</span>
+          <span class="skill-item">VS Code</span>
+          <span class="skill-item">Raspberry Pi</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Contact ── -->
+<section id="contact" class="contact-section">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Contact</div>
+      <h2 class="contact-title">Let's connect<span class="accent">.</span></h2>
+      <p class="contact-desc">
+        Currently open to opportunities. Feel free to reach out — I'd love to hear from you.
+      </p>
+      <div class="contact-links">
+        <a href="mailto:me@jacobw.dev" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          me@jacobw.dev
+        </a>
+        <a href="https://github.com/therealfunnyfood" target="_blank" class="btn btn-ghost">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+  <div class="container">
+    <p>Built by Jacob Wynhof — 2025</p>
+  </div>
 </footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Active nav link
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      const top = section.offsetTop - 100;
+      if (scrollY >= top) current = section.getAttribute('id');
+    });
+    navLinks.forEach(link => {
+      link.style.color = link.getAttribute('href') === `#${current}` ? 'var(--accent)' : '';
+    });
+  });
+</script>
+
 </body>
 </html>
